@@ -80,7 +80,7 @@ input[type="date"]{
   margin-bottom: 1rem;
 }
 .slidecontainer {
-  width: 2.5rem;
+  width: 1.5rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -88,7 +88,7 @@ input[type="date"]{
   color: var(--sepratorgray);
 }
 .slide1{
-width: 0.5rem;;
+width: 0.5rem;
 height:8px;
 background-color:#0c0b0b;
 -moz-border-radius:4px;
