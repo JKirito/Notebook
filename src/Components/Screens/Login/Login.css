@@ -61,6 +61,8 @@ input[type="password"] {
   font-weight: 400;
   font-size: 1.2rem;
   line-height: 19px;
+  padding: 0 0.5rem;
+  color: var(--darkBlue);
 }
 
 .buttonlogin {
@@ -106,6 +108,7 @@ input[type="password"] {
   font-size: 10px;
   font-family: Roboto;
   font-style: normal;
+  color: var(--sepratorgray);
 }
 .seperator {
   width: 7.28rem;
