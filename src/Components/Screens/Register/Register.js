@@ -3,7 +3,7 @@ import "./Register.css";
 function Register(){
 	return(
 		<div className="Register">
-			<p className="para"><strong>Step 1 of 2</strong></p>
+			<p className="para">Step 1 of 2</p>
 				<div className="container">
            			<h1>Registration</h1>
            			<div className="inputcontainer">
@@ -19,7 +19,7 @@ function Register(){
          					</label>
           					<input type="tel"/>
           				</div>
-          				<div class Name="insideinput">
+          				<div className="insideinput">
           				<label htmlFor="DOB" className="text">
           					DOB
          				</label>

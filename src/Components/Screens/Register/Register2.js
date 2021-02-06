@@ -3,7 +3,7 @@ import "./Register2.css";
 function Register2(){
 	return(
 		<div className="Register2">
-			<p><strong>Step 2 of 2</strong></p>	
+			<p className="para">Step 2 of 2</p>	
 				<div className="container">
            			<h1>Registration</h1>
            			<div className="inputcontainer">
@@ -18,8 +18,13 @@ function Register2(){
          				</label>
          				<input type="password"/>
          			</div>
+         			<div className="check1">
+						<p>☑ At least 8 characters</p>         			
+						<p>☑ A mixture of both uppercase and lowercase characters</p>         			
+						<p>☑ Inclusion of at least one special character,eg-:!@#?]</p>         			
          			<button className="createaccount">Create Account</button>
-        			<div className="slidecontainer">
+        			 </div>
+              <div className="slidecontainer">
         				<div className="slide1" />
         				<div className="slide2" />
         			</div>
