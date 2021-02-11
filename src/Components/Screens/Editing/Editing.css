@@ -1,0 +1,77 @@
+.container {
+  background: #1a313e;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100px;
+  height: 70vh;
+  border-radius: 0px 50px 50px 0px;
+  top: 50%;
+  left: -48px;
+  transform: translateY(-50%);
+  /* overflow-y: scroll; */
+  /* overflow-y: scroll; */
+  /* scrollbar-width: none; */
+}
+.icon {
+  height: 32px;
+  width: 32px;
+  padding-left: 0.3rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.flex {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+}
+/* .container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+} */
+
+/* 
+.left-col::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+} */
+.left-col {
+  height: 100%;
+  width: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  overflow-y: scroll;
+}
+.left-col::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+.left-col::-webkit-scrollbar {
+  width: 0em;
+}
+.left-col::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+}
+.right-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding-right: 0.8rem;
+}
+.buttoncustom {
+  /* background-color: red; */
+  width: 1.4rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
