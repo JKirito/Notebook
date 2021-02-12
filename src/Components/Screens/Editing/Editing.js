@@ -37,14 +37,16 @@ const Drawer = () => {
     >
       <div className="flex">
         <div className="left-col">
-          <AddPage className="icon" />
-          <Comment className="icon" />
-          <Highlight className="icon" />
-          <Copy className="icon" />
-          <Save className="icon" />
-          <Delete className="icon" />
-          <Export className="icon" />
-          <Setting className="icon" />
+          <div className="scroll">
+            <AddPage className="icon" />
+            <Comment className="icon" />
+            <Highlight className="icon" />
+            <Copy className="icon" />
+            <Save className="icon" />
+            <Delete className="icon" />
+            <Export className="icon" />
+            <Setting className="icon" />
+          </div>
         </div>
         <div className="right-col" onClick={performAction}>
           <div className="buttoncustom">
