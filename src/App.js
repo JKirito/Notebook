@@ -1,5 +1,7 @@
 import "./App.css";
-import Editing from "./Components/Screens/Editing/Editing";
+// import Canvas from "./Components/Screens/Canvas/Canvas";
+import EditingLayout from "./Components/Screens/Holders/EditingLayout";
+// import Editing from "./Components/Screens/Editing/Editing";
 // import Home from "./Components/Screens/Home/Home";
 // import Login from "./Components/Screens/Login/Login";
 
@@ -8,7 +10,9 @@ function App() {
     <div className="App">
       {/* <Login /> */}
       {/* <Home /> */}
-      <Editing />
+      {/* <Editing /> */}
+      {/* <Canvas /> */}
+      <EditingLayout />
     </div>
   );
 }
