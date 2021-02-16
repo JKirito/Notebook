@@ -47,6 +47,7 @@ const Drawer = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(10);
+  const [brushSize, setBrushSize] = useState(10);
 
   // Canvas Refrence
   const saveableCanvas = useRef();
@@ -89,6 +90,10 @@ const Drawer = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
     }
+  };
+  const brushSlideChange = (e) => {
+    console.log("Working", e.target.value);
+    setBrushSize(e.target.value);
   };
   // const decrementPage = () => {};
 
@@ -251,7 +256,7 @@ const Drawer = () => {
               <Load className="icon" onClick={loadData} />
               {/* <Comment className="icon" /> */}
               <Highlight className="icon" />
-              <Copy className="icon" />
+              <Copy className="icon" onClick={undoData} />
               <Save className="icon" onClick={saveData} />
               <Delete className="icon" onClick={clearData} />
               <Export className="icon" onClick={exportDataFromCanvas} />
@@ -288,6 +293,36 @@ const Drawer = () => {
           <Right />
         </div>
       </div>
+      <motion.div
+        className="modalContainer"
+        animate={{
+          display: "none",
+        }}
+      >
+        <div className="modalBox">
+          <p>Customize Brush</p>
+          <p>Styler</p>
+          <div className="stylerContainer">
+            <div className="bigCircle">
+              <div
+                className="smallCircle"
+                style={{
+                  width: brushSize + "px",
+                  height: brushSize + "px",
+                }}
+              ></div>
+            </div>
+            <input
+              type="range"
+              min={0}
+              max={50}
+              step={1}
+              className="slider"
+              onChange={brushSlideChange}
+            />
+          </div>
+        </div>
+      </motion.div>
       <a id="link"></a>
     </div>
   );
