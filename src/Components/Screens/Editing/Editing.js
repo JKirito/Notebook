@@ -9,6 +9,9 @@ import { ReactComponent as Highlight } from "../Editing/Highlight.svg";
 import { ReactComponent as Save } from "../Editing/Save.svg";
 import { ReactComponent as Delete } from "../Editing/Delete.svg";
 import { ReactComponent as Setting } from "../Editing/Setting.svg";
+import { ReactComponent as Left } from "../Editing/Left.svg";
+import { ReactComponent as Right } from "../Editing/Right.svg";
+import { ReactComponent as Load } from "../Editing/Load.svg";
 // import backgroundImage from "../Editing/Background.svg";
 import TestImage1 from "../Editing/Test.PNG";
 import TestImage2 from "../Editing/Test2.PNG";
@@ -42,8 +45,8 @@ const Drawer = () => {
     width: window.innerWidth * 1,
   });
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPage, setTotalPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(10);
 
   // Canvas Refrence
   const saveableCanvas = useRef();
@@ -74,22 +77,66 @@ const Drawer = () => {
     saveableCanvas.current.clear();
     console.log("Cleared");
   };
-  // const undoData = () => {
-  //   saveableCanvas.current.undo();
-  // };
-  async function autoDownloadCanvas() {
+  const undoData = () => {
+    saveableCanvas.current.undo();
+  };
+  const incrementPage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const decrementPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  // const decrementPage = () => {};
+
+  // References of All the Available Canvas
+
+  const canvasMainDataHolder = document.querySelector(
+    "#root > div > div > div > div > div.imageStyles > canvas:nth-child(2)"
+  );
+  const canvasBackgroundDataHolder = document.querySelector(
+    "#root > div > div > div > div > div.imageStyles > canvas:nth-child(4)"
+  );
+
+  async function exportDataFromCanvas() {
     let link = document.getElementById("link");
     link.setAttribute("download", "example.png");
-    link.setAttribute(
-      "href",
-      document
-        .querySelector(
-          "#root > div > div > div > div > div.imageStyles > canvas:nth-child(4)"
-        )
-        .toDataURL("image/png")
-    );
+    link.setAttribute("href", canvasMainDataHolder.toDataURL("image/png"));
+    link.click();
+
+    // let backgroundDataURL = canvasBackgroundDataHolder.toDataURL("image/png");
+    // let foregroundDataURL = canvasMainDataHolder.toDataURL("image/png");
+    // testComposition(backgroundDataURL, foregroundDataURL);
+  }
+
+  // TODO: Better Composition Function But Not Working
+
+  function testComposition(background, foreground) {
+    let fore = new Image();
+    let back = new Image();
+    const tempcanvas = document.createElement("canvas");
+    tempcanvas.width = dimensions.width;
+    tempcanvas.height = dimensions.height;
+    let tempctx = tempcanvas.getContext("2d");
+    // back.onload = function () {
+    tempctx.drawImage(back, 0, 0, dimensions.width, dimensions.height);
+    // };
+    // fore.onload = function () {
+    tempctx.drawImage(fore, 0, 0, dimensions.width, dimensions.height);
+    // };
+    fore.src = foreground;
+    back.src = background;
+    let link = document.getElementById("link");
+    link.setAttribute("download", "example.png");
+    link.setAttribute("href", tempcanvas.toDataURL("image/png"));
     link.click();
   }
+
+  // TODO: Have to make this whole Functionality Again => Bugged Right Now
+  // Composition Functionalites
 
   function compositeImage() {
     // let canvastempref = document.querySelector(
@@ -97,7 +144,7 @@ const Drawer = () => {
     // );
     let currentCanvas = saveableCanvas.current.ctx.drawing.canvas;
     let ctx = currentCanvas.getContext("2d");
-    console.log(ctx);
+    // console.log(ctx);
     // ctx.canvas.drawImage(TestImage1, 0, 0);
     ctx.globalAlpha = 1;
     // ctx.drawImage(TestImage2, 0, 0);
@@ -106,10 +153,14 @@ const Drawer = () => {
     const backImage = document.querySelector(
       "#root > div > div > div > div > div.imageStyles > canvas:nth-child(4)"
     );
-    console.log(backImage);
+    // console.log(backImage);
     const backImageContext = backImage.getContext("2d");
-    var drawingCanvasDataURL = currentCanvas.toDataURL("image/png");
-    const drawingbase64img = drawingCanvasDataURL;
+
+    // These Are Both Base64 Image Data URL's
+
+    let backImageDataURL = backImage.toDataURL("image/png");
+    let drawingCanvasDataURL = currentCanvas.toDataURL("image/png");
+    // const drawingbase64img = drawingCanvasDataURL;
     // const drawingbase64img = drawingCanvasDataURL.replace(
     //   /^data:image\/(png|jpg);base64,/,
     //   ""
@@ -127,25 +178,27 @@ const Drawer = () => {
       dimensions.width,
       dimensions.height
     );
-    console.log(drawnData);
+    // console.log(drawnData);
     backImageContext.putImageData(
       drawnData,
       dimensions.width,
       dimensions.height
     );
     // Canvas 2 => Having Drawn Data
-    // document.querySelector(
-    //   "#root > div > div > div > div > div.imageStyles > canvas:nth-child(2)"
-    // );
-    // console.log(drawingbase64img);
-    combineImage(drawingbase64img, drawnData);
+    drawingCanvasDataURL = document
+      .querySelector(
+        "#root > div > div > div > div > div.imageStyles > canvas:nth-child(2)"
+      )
+      .toDataURL("image/png");
+    // console.log(backImageDataURL);
+    // console.log(drawingCanvasDataURL);
+    combineImage(drawingCanvasDataURL, backImageDataURL);
   }
 
-  function combineImage(imagedata, drawnData) {
-    console.log(TestImage1);
+  function combineImage(drawingData, backImageData) {
     var canvas = document.createElement("canvas");
-    // canvas.width = imagedata.width;
-    // canvas.height = imagedata.height;
+    canvas.width = dimensions.width;
+    canvas.height = dimensions.height;
     var ctx = canvas.getContext("2d");
     let img1 = new Image();
     img1.width = dimensions.width;
@@ -153,26 +206,21 @@ const Drawer = () => {
     let img2 = new Image();
     img2.width = dimensions.width;
     img2.height = dimensions.height;
-    img1.src = drawnData;
-    img1.onload = function () {
-      canvas.width = img1.width;
-      canvas.height = img1.height;
+    img1.src = drawingData;
+    img2.src = backImageData;
 
-      ctx.drawImage(img1, 0, 0);
+    canvas.width = img1.width;
+    canvas.height = img1.height;
+    ctx.drawImage(img2, 0, 0);
+    // canvas.toDataURL("image/jpeg");
+    ctx.drawImage(img1, 0, 0);
+    // autoDownloadCanvas(canvas);
 
-      canvas.toDataURL("image/jpeg");
-    };
-    img2.onload = function () {
-      canvas.width = img2.width;
-      canvas.height = img2.height;
-
-      ctx.drawImage(img2, 0, 0);
-
-      canvas.toDataURL("image/jpeg");
-    };
     canvas.toBlob(function (blob) {
-      // console.log("blob", blob);
-      img1.src = URL.createObjectURL(blob);
+      console.log("blob", blob);
+      let img3 = new Image();
+      img3.src = URL.createObjectURL(blob);
+
       let link = document.getElementById("link");
       link.setAttribute("download", "example.png");
       link.setAttribute("href", canvas.toDataURL("image/png"));
@@ -199,13 +247,14 @@ const Drawer = () => {
         <div className="flex">
           <div className="left-col">
             <div className="scroll">
-              <AddPage className="icon" onClick={loadData} />
-              <Comment className="icon" />
+              <AddPage className="icon" />
+              <Load className="icon" onClick={loadData} />
+              {/* <Comment className="icon" /> */}
               <Highlight className="icon" />
-              <Copy className="icon" onClick={compositeImage} />
+              <Copy className="icon" />
               <Save className="icon" onClick={saveData} />
               <Delete className="icon" onClick={clearData} />
-              <Export className="icon" onClick={autoDownloadCanvas} />
+              <Export className="icon" onClick={exportDataFromCanvas} />
               <Setting className="icon" />
             </div>
           </div>
@@ -223,20 +272,20 @@ const Drawer = () => {
         canvasWidth={dimensions.width}
         canvasHeight={dimensions.height}
         hideInterface={true}
-        loadTimeOffset={10}
+        loadTimeOffset={2}
         lazyRadius={5}
         brushRadius={2}
-        imgSrc={TestImage1}
+        // imgSrc={TestImage1}
       />
       <div className="navigationContainer">
-        <div className="iconsmall">
-          <AddPage />
+        <div className="iconsmall" onClick={decrementPage}>
+          <Left />
         </div>
         <div className="textColorTheme">
           {currentPage} / {totalPage}
         </div>
-        <div className="iconsmall">
-          <AddPage />
+        <div className="iconsmall" onClick={incrementPage}>
+          <Right />
         </div>
       </div>
       <a id="link"></a>

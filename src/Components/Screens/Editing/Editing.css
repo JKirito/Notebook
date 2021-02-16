@@ -86,14 +86,17 @@
 .iconsmall {
   width: 2rem;
   height: 2rem;
-  background-color: #535353;
+  /* background-color: #535353; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .navigationContainer {
   position: fixed;
   display: flex;
   width: 15vw;
-  height: 2rem;
+  height: 3rem;
   top: 2.5rem;
   left: 50%;
   transform: translateX(-50%);
@@ -114,6 +117,6 @@
 
 @media only screen and (max-width: 640px) {
   .navigationContainer {
-    width: 40vw;
+    width: 30vw;
   }
 }
