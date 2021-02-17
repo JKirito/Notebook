@@ -11,7 +11,9 @@ import { ReactComponent as Delete } from "../Editing/Delete.svg";
 import { ReactComponent as Setting } from "../Editing/Setting.svg";
 import { ReactComponent as Left } from "../Editing/Left.svg";
 import { ReactComponent as Right } from "../Editing/Right.svg";
-import { ReactComponent as Load } from "../Editing/Load.svg";
+import { ReactComponent as Undo } from "../Editing/Undo.svg";
+import { ReactComponent as Eraser } from "../Editing/Eraser.svg";
+import { ReactComponent as LoadData } from "../Editing/LoadData.svg";
 // import backgroundImage from "../Editing/Background.svg";
 import TestImage1 from "../Editing/Test.PNG";
 import TestImage2 from "../Editing/Test2.PNG";
@@ -30,12 +32,22 @@ function Editing() {
 
 const Drawer = () => {
   const [isOpen, setOpen] = useState(false);
+
   const performAction = (e) => {
     console.log("Pressed");
     if (isOpen) {
       setOpen(false);
     } else {
       setOpen(true);
+    }
+  };
+
+  // For Testing Set to TRUE else FALSE
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+    if (isModalOpen) {
+      setOpen(false);
     }
   };
 
@@ -47,7 +59,9 @@ const Drawer = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(10);
-  const [brushSize, setBrushSize] = useState(10);
+  const [brushSize, setBrushSize] = useState(5);
+
+  const [brushColor, setBrushColor] = useState("#7e7e7e");
 
   // Canvas Refrence
   const saveableCanvas = useRef();
@@ -92,7 +106,7 @@ const Drawer = () => {
     }
   };
   const brushSlideChange = (e) => {
-    console.log("Working", e.target.value);
+    // console.log("Working", e.target.value);
     setBrushSize(e.target.value);
   };
   // const decrementPage = () => {};
@@ -253,14 +267,25 @@ const Drawer = () => {
           <div className="left-col">
             <div className="scroll">
               <AddPage className="icon" />
-              <Load className="icon" onClick={loadData} />
+              <LoadData className="icon" onClick={loadData} />
               {/* <Comment className="icon" /> */}
-              <Highlight className="icon" />
-              <Copy className="icon" onClick={undoData} />
+              <Highlight
+                className="icon"
+                onClick={() => {
+                  setBrushColor("#7e7e7e");
+                }}
+              />
+              <Eraser
+                className="icon"
+                onClick={() => {
+                  setBrushColor("#fff");
+                }}
+              />
+              <Undo className="icon" onClick={undoData} />
               <Save className="icon" onClick={saveData} />
               <Delete className="icon" onClick={clearData} />
               <Export className="icon" onClick={exportDataFromCanvas} />
-              <Setting className="icon" />
+              <Setting className="icon" onClick={toggleModal} />
             </div>
           </div>
           <div className="right-col" onClick={performAction}>
@@ -279,7 +304,8 @@ const Drawer = () => {
         hideInterface={true}
         loadTimeOffset={2}
         lazyRadius={5}
-        brushRadius={2}
+        brushColor={brushColor}
+        brushRadius={brushSize / 2}
         // imgSrc={TestImage1}
       />
       <div className="navigationContainer">
@@ -296,10 +322,19 @@ const Drawer = () => {
       <motion.div
         className="modalContainer"
         animate={{
-          display: "none",
+          display: isModalOpen ? "flex" : "none",
+          // visibility: isModalOpen ? "visible" : "hidden",
         }}
+        transition={{ duration: 1 }}
       >
-        <div className="modalBox">
+        <motion.div
+          className="modalBox"
+          animate={{
+            width: isModalOpen ? "48%" : "2%",
+            visibility: isModalOpen ? "visible" : "hidden",
+          }}
+          transition={{ duration: 0.4 }}
+        >
           <p>Customize Brush</p>
           <p>Styler</p>
           <div className="stylerContainer">
@@ -315,13 +350,15 @@ const Drawer = () => {
             <input
               type="range"
               min={0}
-              max={50}
+              max={52}
               step={1}
+              value={brushSize}
               className="slider"
               onChange={brushSlideChange}
             />
           </div>
-        </div>
+          <button onClick={toggleModal}>Close</button>
+        </motion.div>
       </motion.div>
       <a id="link"></a>
     </div>
