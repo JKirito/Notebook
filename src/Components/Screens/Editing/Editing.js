@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
+
+// Icons
 import { ReactComponent as AddPage } from "../Editing/Addpage.svg";
 import { ReactComponent as SepLine } from "../Editing/Sepline.svg";
 import { ReactComponent as Comment } from "../Editing/Comment.svg";
@@ -60,26 +62,86 @@ const Drawer = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPage, setTotalPage] = useState(10);
   const [brushSize, setBrushSize] = useState(5);
-
+  const [isReady, setReady] = useState(false);
+  const [portraitMode, setPortraitMode] = useState(false);
+  const [portraitDimension, setPortraitDimensionValues] = useState({
+    height: 500,
+    width: 500,
+    firsttimeset: false,
+  });
+  const [landscapeDimension, setLandscapeDimensionvalues] = useState({
+    height: 500,
+    width: 500,
+    firsttimeset: false,
+  });
+  // useEffect(() => {});
   const [brushColor, setBrushColor] = useState("#7e7e7e");
 
   // Canvas Refrence
   const saveableCanvas = useRef();
-
   useEffect(() => {
-    function handleResize() {
+    if (!isReady) {
+      setReady(true);
+      console.log(isReady);
+      handleResize();
+    }
+  }, [isReady]);
+  function handleResize() {
+    if (window.matchMedia("(orientation: portrait)").matches) {
+      // you're in PORTRAIT mode
+      console.log("Portrait Mode");
+      setPortraitMode(true);
+      if (setPortraitDimensionValues.firsttimeset) {
+        console.log("Main Dimension Set");
+        setPortraitDimensionValues({
+          width: setPortraitDimensionValues.width,
+          height: setPortraitDimensionValues.height,
+          firsttimeset: true,
+        });
+      } else {
+        console.log("First Time Dimension Sett");
+        setPortraitDimensionValues({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          firsttimeset: true,
+        });
+        console.log(portraitDimension);
+      }
+    }
+    if (window.matchMedia("(orientation: landscape)").matches) {
+      // you're in LANDSCAPE mode
+      setPortraitMode(false);
+      console.log("Landscape Mode");
+      if (setLandscapeDimensionvalues.firsttimeset) {
+        console.log("Main Dimension Set");
+        setLandscapeDimensionvalues({
+          width: setLandscapeDimensionvalues.width,
+          height: setLandscapeDimensionvalues.height,
+          firsttimeset: true,
+        });
+      } else {
+        console.log("First Time Dimension Sett");
+        setLandscapeDimensionvalues({
+          width: window.innerWidth,
+          height: window.innerHeight,
+          firsttimeset: true,
+        });
+        console.log(portraitDimension);
+      }
       setDimensions({
-        height: window.innerHeight * 1,
-        width: window.innerWidth * 1,
+        height: window.innerHeight,
+        width: window.innerWidth,
       });
     }
-
+  }
+  useEffect(() => {
     window.addEventListener("resize", handleResize);
 
     return (_) => {
       window.removeEventListener("resize", handleResize);
     };
   });
+
   const saveData = () => {
     localStorage.setItem("savedDrawing", saveableCanvas.current.getSaveData());
     console.log("Data Saved");
@@ -115,6 +177,7 @@ const Drawer = () => {
 
   const canvasMainDataHolder = document.querySelector(
     "#root > div > div > div > div > div.imageStyles > canvas:nth-child(2)"
+    // document.querySelector("#root > div > div > div > div > div.canvasContainer > div > canvas:nth-child(2)")
   );
   const canvasBackgroundDataHolder = document.querySelector(
     "#root > div > div > div > div > div.imageStyles > canvas:nth-child(4)"
@@ -295,19 +358,25 @@ const Drawer = () => {
           </div>
         </div>
       </motion.div>
+
       <CanvasDraw
         className="imageStyles"
         ref={saveableCanvas}
         hideGrid={true}
-        canvasWidth={dimensions.width}
-        canvasHeight={dimensions.height}
+        // canvasWidth={
+        //   portraitMode ? portraitDimension.width : landscapeDimension.width
+        // }
+        // canvasHeight={
+        //   portraitMode ? portraitDimension.height : landscapeDimension.height
+        // }
         hideInterface={true}
         loadTimeOffset={2}
         lazyRadius={5}
         brushColor={brushColor}
         brushRadius={brushSize / 2}
-        // imgSrc={TestImage1}
+        imgSrc={TestImage1}
       />
+
       <div className="navigationContainer">
         <div className="iconsmall" onClick={decrementPage}>
           <Left />
@@ -364,5 +433,4 @@ const Drawer = () => {
     </div>
   );
 };
-
 export default Editing;
